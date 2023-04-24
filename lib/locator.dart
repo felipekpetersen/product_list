@@ -12,6 +12,6 @@ void setupGetIt() {
   locator.registerLazySingleton(() => ProductController(locator<ProductRepo>()));
   locator.registerLazySingleton(() => ProductCubit(locator<ProductController>()));
 
-  locator.registerLazySingleton(() => EditProductCubit(locator<ProductController>()));
+  locator.registerLazySingleton(() => DetailProductCubit(locator<ProductController>()));
 
 }

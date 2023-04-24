@@ -6,12 +6,16 @@ import 'package:product_list/Domain/Product/ProductModel.dart';
 
 part 'edit_product_state.dart';
 
-class EditProductCubit extends Cubit<EditProductState> {
+class DetailProductCubit extends Cubit<DetailProductState> {
   final ProductController _controller;
 
-  EditProductCubit( this._controller) : super(EditProductInitial());
+  DetailProductCubit( this._controller) : super(DetailProductInitial());
 
-   void selectProduct(ProductsModel product) {
-    emit(EditProductLoaded(product));
+  //  void selectProduct(ProductsModel product) {
+  //   emit(EditProductLoaded(product));
+  // }
+
+  void getSelectedProduct() {
+     emit(DetailProductLoaded(_controller.getSelectedProduct()));
   }
 }

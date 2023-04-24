@@ -23,9 +23,9 @@ class AppRouter {
       case EDIT_PRODUCT_ROUTE:
         return MaterialPageRoute(
             builder: (_) => BlocProvider(
-                  create: (context) => EditProductCubit(
+                  create: (context) => DetailProductCubit(
                        locator<ProductController>()),
-                  child: EditProduct(),
+                  child: DetailProduct(),
                 ));
     
       default:

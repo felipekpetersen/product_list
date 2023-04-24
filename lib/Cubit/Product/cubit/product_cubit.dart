@@ -19,6 +19,10 @@ class ProductCubit extends Cubit<ProductState> {
     }
   }
 
+  void selectProduct(ProductsModel product) {
+    _controller.selectProduct(product);
+  }
+
   // void selectProduct(ProductsModel product) {
   //   emit(ProductSelected(product));
   // }

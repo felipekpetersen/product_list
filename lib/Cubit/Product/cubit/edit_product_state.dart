@@ -1,13 +1,19 @@
 part of 'edit_product_cubit.dart';
 
 @immutable
-abstract class EditProductState {}
+abstract class DetailProductState {}
 
-class EditProductInitial extends EditProductState {}
+class DetailProductInitial extends DetailProductState {}
 
-class EditProductLoaded extends EditProductState {
+class DetailProductLoaded extends DetailProductState {
   final ProductsModel product;
 
-  EditProductLoaded(this.product);
+  DetailProductLoaded(this.product);
+}
+
+class DetailProductError extends DetailProductState {
+  final String error;
+
+  DetailProductError(this.error);
 }
 

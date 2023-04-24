@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import '../../Domain/Product/ProductModel.dart';
 
 class ProductRepo {
+  ProductsModel selectedProduct = ProductsModel();
+
   getProducts() async {
     var response = await http.get(
       Uri.parse('https://fakestoreapi.com/products'),
@@ -19,5 +21,13 @@ class ProductRepo {
     } else {
       throw Exception('Failed to load products');
     }
+  }
+
+  selectProduct(ProductsModel product) {
+    selectedProduct = product;
+  }
+
+  getSelectedProduct() {
+    return selectedProduct;
   }
 }

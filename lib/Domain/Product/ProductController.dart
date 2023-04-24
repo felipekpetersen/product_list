@@ -14,6 +14,13 @@ class ProductController {
     return await _repo.getProducts();
   }
 
+  void selectProduct(ProductsModel product) {
+    _repo.selectProduct(product);
+  }
+
+  ProductsModel getSelectedProduct() {
+    return _repo.getSelectedProduct();
+  }
   // void selectProduct(ProductsModel product) {
   //   locator<ProductRepo>().selectProduct(product);
   // }
