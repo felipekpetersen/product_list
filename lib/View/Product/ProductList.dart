@@ -27,9 +27,11 @@ class _ProductListState extends State<ProductList> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {
-             Navigator.pushNamed(context, CART_ROUTE);
-          }, icon: Icon(Icons.shopping_cart))
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, CART_ROUTE);
+              },
+              icon: Icon(Icons.shopping_cart))
         ],
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -71,7 +73,17 @@ Widget _buildProductScreen(context, state) {
               ],
             ),
             Expanded(
-              child: ListView.builder(
+              child: GridView.builder(
+                // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //     crossAxisCount: 3,
+                //     crossAxisSpacing: 16,
+                //     mainAxisSpacing: 16,
+                //     childAspectRatio: 0.8),
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 300,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.8),
                 itemCount: state.products.length,
                 itemBuilder: (context, index) {
                   return _product(state.products[index], context);
@@ -100,54 +112,90 @@ Widget _productTile(ProductsModel product) {
     margin: EdgeInsets.all(8),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8)),
-    child: Row(
+      borderRadius: BorderRadius.circular(8),
+      color: Colors.white
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(product.image ?? ''), fit: BoxFit.cover),
-              borderRadius: BorderRadius.circular(8)),
-        ),
-        SizedBox(
-          width: 24,
-        ),
         Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                product.title ?? "No Title",
-                style: PRODUCT_TITLE_STYLE,
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(color: Colors.grey[300]),
+              child: Image.network(
+                product.image ?? '',
+                // width: 100,
+                // height: 100,
+                fit: BoxFit.fitHeight,
               ),
-              Text(
-                product.description ?? "No Description",
-                style: PRODUCT_DESCRIPTION_STYLE,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              product.price != null
-                  ? Text(
-                      product.price!.toPrice(),
-                      style: PRODUCT_PRICE_STYLE,
-                    )
-                  : Text(
-                      'No Price',
-                      style: PRODUCT_PRICE_STYLE,
-                    ),
-            ],
+            ),
           ),
         ),
+        SizedBox(height: 8,),
+        Text(product.title ?? '', style: PRODUCT_TITLE_STYLE, maxLines: 2, overflow: TextOverflow.ellipsis,),
+        SizedBox(height: 8,),
+        Text(product.price?.toPrice() ?? '', style: PRODUCT_DESCRIPTION_STYLE),
+        SizedBox(height: 8,),
         _addToCartButton(product)
       ],
     ),
   );
 }
+
+// Widget _productTile(ProductsModel product) {
+//   return Container(
+//     margin: EdgeInsets.all(8),
+//     padding: EdgeInsets.all(8),
+//     decoration: BoxDecoration(
+//         border: Border.all(color: Colors.black),
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(8)),
+//     child: Row(
+//       children: [
+//         Container(
+//           width: 60,
+//           height: 60,
+//           decoration: BoxDecoration(
+//               image: DecorationImage(
+//                   image: NetworkImage(product.image ?? ''), fit: BoxFit.cover),
+//               borderRadius: BorderRadius.circular(8)),
+//         ),
+//         SizedBox(
+//           width: 24,
+//         ),
+//         Expanded(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Text(
+//                 product.title ?? "No Title",
+//                 style: PRODUCT_TITLE_STYLE,
+//               ),
+//               Text(
+//                 product.description ?? "No Description",
+//                 style: PRODUCT_DESCRIPTION_STYLE,
+//                 maxLines: 3,
+//                 overflow: TextOverflow.ellipsis,
+//               ),
+//               product.price != null
+//                   ? Text(
+//                       product.price!.toPrice(),
+//                       style: PRODUCT_PRICE_STYLE,
+//                     )
+//                   : Text(
+//                       'No Price',
+//                       style: PRODUCT_PRICE_STYLE,
+//                     ),
+//             ],
+//           ),
+//         ),
+//         _addToCartButton(product)
+//       ],
+//     ),
+//   );
+// }
 
 Widget _addToCartButton(ProductsModel product) {
   return BlocBuilder<CartCubit, CartState>(
@@ -159,20 +207,23 @@ Widget _addToCartButton(ProductsModel product) {
       if (state is CartLoaded) {
         final inCart =
             state.products.any((element) => element.id == product.id);
-        return InkWell(
-          onTap: () {
-            inCart ? null :
-            BlocProvider.of<CartCubit>(context).addToCart(product);
-          },
-          child: Container(
-            width: 100,
-            height: 40,
-            decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(8)),
-            child: Center(
-              child: Text(
-                inCart ? 'Added' : 'Add to Cart',
-                style: TextStyle(color: Colors.white),
+        return Center(
+          child: InkWell(
+            onTap: () {
+              inCart
+                  ? null
+                  : BlocProvider.of<CartCubit>(context).addToCart(product);
+            },
+            child: Container(
+              // width: 100,
+              height: 40,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(8)),
+              child: Center(
+                child: Text(
+                  inCart ? 'Added' : 'Add to Cart',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
