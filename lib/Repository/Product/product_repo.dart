@@ -4,6 +4,7 @@ import '../../Domain/Product/ProductModel.dart';
 
 class ProductRepo {
   ProductsModel selectedProduct = ProductsModel();
+  List<ProductsModel> cartProducts = [];
 
   getProducts() async {
     var response = await http.get(
@@ -29,5 +30,17 @@ class ProductRepo {
 
   getSelectedProduct() {
     return selectedProduct;
+  }
+
+  getCartProducts() {
+    return cartProducts;
+  }
+
+  addToCart(ProductsModel product) {
+    cartProducts.add(product);
+  }
+
+  removeFromCart(ProductsModel product) {
+    cartProducts.remove(product);
   }
 }

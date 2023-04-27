@@ -9,8 +9,8 @@ Flutter E-commerce template using Bloc/Cubit and Get It.
 This project is intended to demonstrate my skills and knowledge using Flutter, and it can be evaluated for this purpose.
 
 ✅ product list
-🚧 product detail
+✅ product detail
 🚧 search bar
-🚧 Cart
+✅ Cart
 🚧 Categories
 

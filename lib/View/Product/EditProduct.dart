@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/Common/Constants.dart';
+import 'package:product_list/Common/Extensions.dart';
 import 'package:product_list/Cubit/Product/cubit/edit_product_cubit.dart';
 
 class DetailProduct extends StatefulWidget {

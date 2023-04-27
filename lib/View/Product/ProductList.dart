@@ -4,7 +4,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/Common/Constants.dart';
+import 'package:product_list/Common/Extensions.dart';
 import 'package:product_list/Common/TextStyle.dart';
+import 'package:product_list/Cubit/Cart/cubit/cart_cubit.dart';
 
 import '../../Cubit/Product/cubit/edit_product_cubit.dart';
 import '../../Cubit/Product/cubit/product_cubit.dart';
@@ -23,6 +25,14 @@ class _ProductListState extends State<ProductList> {
     BlocProvider.of<ProductCubit>(context).getProducts();
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(onPressed: () {
+             Navigator.pushNamed(context, CART_ROUTE);
+          }, icon: Icon(Icons.shopping_cart))
+        ],
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       body: BlocBuilder<ProductCubit, ProductState>(builder: (context, state) {
         if (state is ProductInitial) {
           return Center(
@@ -41,47 +51,34 @@ class _ProductListState extends State<ProductList> {
 }
 
 Widget _buildProductScreen(context, state) {
-  return Scaffold(
-    appBar: AppBar(),
-    body: Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 1200, maxHeight: double.infinity),
-        child: Container(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Products', style: TITLE_STYLE,),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Text(
-                        'Add product',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  )
-                ],
+  return Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: 1200, maxHeight: double.infinity),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Products',
+                  style: TITLE_STYLE,
+                ),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: state.products.length,
+                itemBuilder: (context, index) {
+                  return _product(state.products[index], context);
+                },
               ),
-              Expanded( 
-                child: ListView.builder(
-                          itemCount: state.products.length,
-                          itemBuilder: (context, index) {
-                            return _product(state.products[index], context);
-                          },
-                        ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ),
@@ -91,7 +88,6 @@ Widget _buildProductScreen(context, state) {
 Widget _product(ProductsModel product, context) {
   return InkWell(
     onTap: () {
-      // BlocProvider.of<EditProductCubit>(context).selectProduct(product);
       BlocProvider.of<ProductCubit>(context).selectProduct(product);
       Navigator.pushNamed(context, EDIT_PRODUCT_ROUTE);
     },
@@ -117,7 +113,9 @@ Widget _productTile(ProductsModel product) {
                   image: NetworkImage(product.image ?? ''), fit: BoxFit.cover),
               borderRadius: BorderRadius.circular(8)),
         ),
-        SizedBox(width: 24,),
+        SizedBox(
+          width: 24,
+        ),
         Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -127,12 +125,61 @@ Widget _productTile(ProductsModel product) {
                 product.title ?? "No Title",
                 style: PRODUCT_TITLE_STYLE,
               ),
-              Text(product.description ?? "No Description", style: PRODUCT_DESCRIPTION_STYLE, maxLines: 3, overflow: TextOverflow.ellipsis,),
-              product.price != null ? Text(product.price!.toPrice(), style: PRODUCT_PRICE_STYLE,) : Text('No Price', style: PRODUCT_PRICE_STYLE,),
+              Text(
+                product.description ?? "No Description",
+                style: PRODUCT_DESCRIPTION_STYLE,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              product.price != null
+                  ? Text(
+                      product.price!.toPrice(),
+                      style: PRODUCT_PRICE_STYLE,
+                    )
+                  : Text(
+                      'No Price',
+                      style: PRODUCT_PRICE_STYLE,
+                    ),
             ],
           ),
         ),
+        _addToCartButton(product)
       ],
     ),
+  );
+}
+
+Widget _addToCartButton(ProductsModel product) {
+  return BlocBuilder<CartCubit, CartState>(
+    builder: (context, state) {
+      BlocProvider.of<CartCubit>(context).getProducts();
+      if (state is CartLoading) {
+        return CircularProgressIndicator();
+      }
+      if (state is CartLoaded) {
+        final inCart =
+            state.products.any((element) => element.id == product.id);
+        return InkWell(
+          onTap: () {
+            inCart ? null :
+            BlocProvider.of<CartCubit>(context).addToCart(product);
+          },
+          child: Container(
+            width: 100,
+            height: 40,
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(8)),
+            child: Center(
+              child: Text(
+                inCart ? 'Added' : 'Add to Cart',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        );
+      } else {
+        return const Placeholder();
+      }
+    },
   );
 }

@@ -21,7 +21,17 @@ class ProductController {
   ProductsModel getSelectedProduct() {
     return _repo.getSelectedProduct();
   }
-  // void selectProduct(ProductsModel product) {
-  //   locator<ProductRepo>().selectProduct(product);
-  // }
+
+  List<ProductsModel> getCartProducts() {
+    return _repo.getCartProducts();
+  }
+
+  void addToCart(ProductsModel product) {
+    _repo.addToCart(product);
+  }
+
+  void removeFromCart(ProductsModel product) {
+    _repo.removeFromCart(product);
+  }
+
 }
