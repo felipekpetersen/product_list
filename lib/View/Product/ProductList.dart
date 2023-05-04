@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:product_list/Common/Constants.dart';
 import 'package:product_list/Common/Extensions.dart';
 import 'package:product_list/Common/TextStyle.dart';
+import 'package:product_list/Common/Common_Widgets.dart';
 import 'package:product_list/Cubit/Cart/cubit/cart_cubit.dart';
 
 import '../../Cubit/Product/cubit/edit_product_cubit.dart';
@@ -26,6 +27,7 @@ class _ProductListState extends State<ProductList> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         actions: [
           IconButton(
               onPressed: () {
@@ -33,7 +35,7 @@ class _ProductListState extends State<ProductList> {
               },
               icon: Icon(Icons.shopping_cart))
         ],
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: BlocBuilder<ProductCubit, ProductState>(builder: (context, state) {
         if (state is ProductInitial) {
@@ -112,9 +114,7 @@ Widget _productTile(ProductsModel product) {
     margin: EdgeInsets.all(8),
     padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      color: Colors.white
-    ),
+        borderRadius: BorderRadius.circular(8), color: Colors.white),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,70 +132,27 @@ Widget _productTile(ProductsModel product) {
             ),
           ),
         ),
-        SizedBox(height: 8,),
-        Text(product.title ?? '', style: PRODUCT_TITLE_STYLE, maxLines: 2, overflow: TextOverflow.ellipsis,),
-        SizedBox(height: 8,),
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          product.title ?? '',
+          style: PRODUCT_TITLE_STYLE,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        SizedBox(
+          height: 8,
+        ),
         Text(product.price?.toPrice() ?? '', style: PRODUCT_DESCRIPTION_STYLE),
-        SizedBox(height: 8,),
+        SizedBox(
+          height: 8,
+        ),
         _addToCartButton(product)
       ],
     ),
   );
 }
-
-// Widget _productTile(ProductsModel product) {
-//   return Container(
-//     margin: EdgeInsets.all(8),
-//     padding: EdgeInsets.all(8),
-//     decoration: BoxDecoration(
-//         border: Border.all(color: Colors.black),
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(8)),
-//     child: Row(
-//       children: [
-//         Container(
-//           width: 60,
-//           height: 60,
-//           decoration: BoxDecoration(
-//               image: DecorationImage(
-//                   image: NetworkImage(product.image ?? ''), fit: BoxFit.cover),
-//               borderRadius: BorderRadius.circular(8)),
-//         ),
-//         SizedBox(
-//           width: 24,
-//         ),
-//         Expanded(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 product.title ?? "No Title",
-//                 style: PRODUCT_TITLE_STYLE,
-//               ),
-//               Text(
-//                 product.description ?? "No Description",
-//                 style: PRODUCT_DESCRIPTION_STYLE,
-//                 maxLines: 3,
-//                 overflow: TextOverflow.ellipsis,
-//               ),
-//               product.price != null
-//                   ? Text(
-//                       product.price!.toPrice(),
-//                       style: PRODUCT_PRICE_STYLE,
-//                     )
-//                   : Text(
-//                       'No Price',
-//                       style: PRODUCT_PRICE_STYLE,
-//                     ),
-//             ],
-//           ),
-//         ),
-//         _addToCartButton(product)
-//       ],
-//     ),
-//   );
-// }
 
 Widget _addToCartButton(ProductsModel product) {
   return BlocBuilder<CartCubit, CartState>(
@@ -208,25 +165,11 @@ Widget _addToCartButton(ProductsModel product) {
         final inCart =
             state.products.any((element) => element.id == product.id);
         return Center(
-          child: InkWell(
-            onTap: () {
-              inCart
-                  ? null
-                  : BlocProvider.of<CartCubit>(context).addToCart(product);
-            },
-            child: Container(
-              // width: 100,
-              height: 40,
-              decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(8)),
-              child: Center(
-                child: Text(
-                  inCart ? 'Added' : 'Add to Cart',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ),
+          child: cartButton(inCart, () {
+            inCart
+                ? null
+                : BlocProvider.of<CartCubit>(context).addToCart(product);
+          }),
         );
       } else {
         return const Placeholder();

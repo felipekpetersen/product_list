@@ -11,11 +11,8 @@ class DetailProductCubit extends Cubit<DetailProductState> {
 
   DetailProductCubit( this._controller) : super(DetailProductInitial());
 
-  //  void selectProduct(ProductsModel product) {
-  //   emit(EditProductLoaded(product));
-  // }
-
   void getSelectedProduct() {
-     emit(DetailProductLoaded(_controller.getSelectedProduct()));
+    final product = _controller.getSelectedProduct();
+     emit(DetailProductLoaded(product));
   }
 }

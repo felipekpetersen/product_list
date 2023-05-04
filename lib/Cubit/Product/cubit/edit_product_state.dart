@@ -16,4 +16,3 @@ class DetailProductError extends DetailProductState {
 
   DetailProductError(this.error);
 }
-
