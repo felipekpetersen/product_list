@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:product_list/Domain/Product/ProductController.dart';
 
@@ -23,7 +24,4 @@ class ProductCubit extends Cubit<ProductState> {
     _controller.selectProduct(product);
   }
 
-  // void selectProduct(ProductsModel product) {
-  //   emit(ProductSelected(product));
-  // }
 }

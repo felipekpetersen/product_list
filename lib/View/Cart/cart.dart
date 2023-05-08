@@ -16,7 +16,7 @@ class CartWidget extends StatefulWidget {
 }
 
 class _CartWidgetState extends State<CartWidget> {
-  @override
+  @override 
   Widget build(BuildContext context) {
     BlocProvider.of<CartCubit>(context).getProducts();
     return Scaffold(
@@ -68,28 +68,13 @@ Widget _productTile(ProductsModel product) {
             children: [
               Text(product.title ?? '', maxLines: 1, overflow: TextOverflow.ellipsis, style: PRODUCT_TITLE_STYLE,),
               Text(product.description ?? '', maxLines: 2, overflow: TextOverflow.ellipsis, style: PRODUCT_DESCRIPTION_STYLE,),
+              Text(product.price?.toPrice() ?? '', style: PRICE_STYLE),
+
             ],
           ),
         ),
       ),
-      Container(
-        margin: EdgeInsets.all(4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            // IconButton(
-            //   onPressed: () {},
-            //   icon: Icon(Icons.delete),
-            // ),
-            Text(product.price?.toPrice() ?? '', style: PRICE_STYLE),
-          ],
-        ),
-      )
+      
     ]),
   );
 }
-
-// Widget _detailProduct() {
-
-// }

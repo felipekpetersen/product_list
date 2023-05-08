@@ -98,9 +98,11 @@ Widget buildDetailBox(DetailProductLoaded state) {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    state.product.title ?? "No Title",
-                    style: PRODUCT_TITLE_STYLE,
+                  Flexible(
+                    child: Text(
+                      state.product.title ?? "No Title",
+                      style: PRODUCT_TITLE_STYLE,
+                    ),
                   ),
                   Text(
                     (state.product.price ?? 0.0).toPrice(),
